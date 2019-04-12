@@ -4,7 +4,7 @@ import random
 from utils import bellman, evaluate
 
 matT = None
-with open('matT.json', 'r') as f:
+with open('matT2.json', 'r') as f:
     matT = json.load(f)
 
 
@@ -12,19 +12,19 @@ def T(s, a, _s):
     return matT[s - 1][a.upper()][_s - 1]
 
 
-def R(s, a, _s): return (0 if s == 5 else -1)
+def R(s, a, _s): return (0 if s == 6 else -1)
 
 
-gamma = .99
+gamma = .9
 epsilon = 10 ** -4
 epsilon_v = 10 ** -3
 
-S = np.array(range(1, 11))
+S = np.array(range(1, 7))
 
 A = ["N", "S", "L", "O"]
 
-v = np.zeros(10)
-pi = np.full(10, "N")
+v = np.zeros(6)
+pi = np.full(6, "N")
 
 k = 0
 

@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def bellman(T, R, v, A, S, s, gamma):
     res = [float('-inf'), None]
 
@@ -12,31 +13,25 @@ def bellman(T, R, v, A, S, s, gamma):
     return res
 
 
+def evaluate_1(T, R, v, pi, S, gamma, m):
+    I = np.identity(len(S))
 
 
-def evaluate(T, R, v, pi, S, gamma, m):
+def evaluate(T, R, v, pi, S, gamma, epsilon):
     v_old = np.copy(v)
-    v_new = np.array(len(S))
-    for s in S:
-        v_new = sum([T(s, pi[s - 1], _s) * (R(s, pi[s - 1], _s) + gamma * v_old[_s - 1]) for _s in S])
-        v_old[s - 1] = v_new[s - 1]
+    v_new = np.zeros(len(S))
+    exit_loop = False
+    i = 0
+    while True:
+        for s in S:
+            v_new[s - 1] = sum([
+                T(s, pi[s - 1], _s) * (
+                    R(s, pi[s - 1], _s) + gamma * v_old[_s - 1]
+                ) for _s in S
+            ])
+
+        if np.linalg.norm(v_new - v_old, np.inf) < epsilon:
+            break
+        v_old = np.copy(v_new)
+        i += 1
     return v_new
-
-"""
-const improve = (T, R, v, A, S, s, gamma) =>
-  A.reduce(
-    (acc, a) => {
-      const [max] = acc;
-      const q = S.reduce(
-        //para cada s'...
-        (sum, _s) => sum + T(s, a, _s) * (R(s, a, _s) + gamma * v[_s - 1]),
-        0
-      );
-
-      // console.log(q > max ? [q, a] : acc);
-      return q > max ? [q, a] : acc;
-    },
-    [-Infinity, undefined]
-  );
-"""
-
