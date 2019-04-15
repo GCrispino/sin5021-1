@@ -1,7 +1,7 @@
 import numpy as np
 import json
 import random
-from pi import PI
+from pi import PI_mat
 
 matT = None
 with open('matT2.json', 'r') as f:
@@ -15,15 +15,20 @@ def T(s, a, _s):
 def R(s, a, _s): return (0 if s == 6 else -1)
 
 
-gamma = .9
-epsilon = 10 ** -4
-epsilon_v = 10 ** -3
+gamma = .6
+epsilon = 10 ** -8
+n_estados = 6
 
-S = np.array(range(1, 7))
+S = np.array(range(1, n_estados + 1))
 
 A = ["N", "S", "L", "O"]
 
-pi, v, k = PI(A, S, T, R, gamma, epsilon, epsilon_v)
+matR = np.array([
+    {a: [R(s, a, _s) for _s in S] for a in A}
+    for s in S
+])
+
+pi, v, k = PI_mat(A, S, T, matT, R, matR, gamma, epsilon)
 
 print 'k: ', k
 print 'v: ', v

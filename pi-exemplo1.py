@@ -1,7 +1,7 @@
 import numpy as np
 import json
 import random
-from utils import bellman, evaluate
+from pi import PI
 
 matT = None
 with open('matT.json', 'r') as f:
@@ -23,21 +23,7 @@ S = np.array(range(1, 11))
 
 A = ["N", "S", "L", "O"]
 
-v = np.zeros(10)
-pi = np.full(10, "N")
-
-k = 0
-
-while (True):
-    newV = np.copy(evaluate(T, R, v, pi, S, gamma, epsilon_v))
-    res = [bellman(T, R, v, A, S, s, gamma) for s in S]
-
-    newPi = np.array([x[1] for x in res])
-    if (np.linalg.norm(newV - v, np.inf) < epsilon):
-        break
-    v = newV
-    pi = np.copy(newPi)
-    k += 1
+pi, v, k = PI(A, S, T, R, gamma, epsilon, epsilon_v)
 
 print 'k: ', k
 print 'v: ', v
