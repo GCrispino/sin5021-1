@@ -13,8 +13,8 @@ def T(s, a, _s): return matT[s - 1][a.upper()][_s - 1]
 def R(s, a, _s): return (0 if s == 5 else -1)
 
 
-gamma = .9
-epsilon = 10 ** -10
+gamma = 1
+epsilon = 10 ** -4
 
 S = np.array(range(1, 11))
 

@@ -10,13 +10,16 @@ def PI(A, S, T, R, gamma, epsilon, epsilon_v):
     k = 0
 
     while (True):
-        newV = np.copy(evaluate(T, R, v, pi, S, gamma, epsilon_v))
+        newV = evaluate(T, R, v, pi, S, gamma, epsilon_v)
         res = [bellman(T, R, v, A, S, s, gamma) for s in S]
 
         newPi = np.array([x[1] for x in res])
-        if (np.linalg.norm(newV - v, np.inf) < epsilon):
+        norm = np.linalg.norm(newV - v, np.inf)
+        print("norm: ",norm)
+        if (norm < epsilon):
             break
         v = newV
+        print("v: ",v)
         pi = np.copy(newPi)
         k += 1
 

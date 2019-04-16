@@ -8,14 +8,18 @@ with open('matT.json', 'r') as f:
     matT = json.load(f)
 
 
-def T(s, a, _s):
-    return matT[s - 1][a.upper()][_s - 1]
+def T(s, a, _s = None):
+    return matT[s - 1][a.upper()][_s - 1] if _s == None else matT[s - 1][a.upper()][_s - 1]
+
+def T(s, a):
+    return matT[s - 1][a.upper()]
+
 
 
 def R(s, a, _s): return (0 if s == 5 else -1)
 
 
-gamma = .99
+gamma = .9
 epsilon = 10 ** -4
 epsilon_v = 10 ** -3
 

@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import datetime
 
 
 def read_rewards(path):
@@ -73,15 +74,25 @@ def evaluate(T, R, v, pi, S, gamma, epsilon):
     v_new = np.zeros(len(S))
     i = 0
     while True:
+        print 's begin: '
+        begin = datetime.datetime.now()
         for s in S:
-            v_new[s - 1] = sum([
-                0 if T(s, pi[s - 1], _s) == 0
-                else T(s, pi[s - 1], _s) * (
+            #rascunho operacoes com vetor
+            v_s = np.zeros(len(S))
+            #v_s = 0 if T(s, pi[s - 1],None) == 0 else T(s, pi[s - 1],None) * (
+            #    R(s, pi[s - 1],None) + gamma * v_old
+            #)
+            for _s in S:
+                v_s[_s - 1] = 0 if T(s, pi[s - 1], _s) == 0 else T(s, pi[s - 1], _s) * (
                     R(s, pi[s - 1], _s) + gamma * v_old[_s - 1]
                 )
-                for _s in S
-            ])
+
+            v_new[s - 1] = np.sum(v_s)
+        end = datetime.datetime.now()
+        print 's end: '
+        print 'time: ',end - begin
         norm = np.linalg.norm(v_new - v_old, np.inf)
+        print("  norm: ",norm)
         if norm < epsilon:
             break
         v_old = np.copy(v_new)
