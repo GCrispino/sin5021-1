@@ -1,6 +1,11 @@
 import numpy as np
 import pandas as pd
 
+
+def read_rewards(path):
+    return pd.read_csv(path).values
+
+
 """ 
     for each pair (action: file_path), execute read_action function
     and reduce all to (n_states,n_actions,n_states) array
@@ -70,8 +75,9 @@ def evaluate(T, R, v, pi, S, gamma, epsilon):
                     R(s, pi[s - 1], _s) + gamma * v_old[_s - 1]
                 ) for _s in S
             ])
-
-        if np.linalg.norm(v_new - v_old, np.inf) < epsilon:
+        norm = np.linalg.norm(v_new - v_old, np.inf)
+        print 'norm: ', norm
+        if norm < epsilon:
             break
         v_old = np.copy(v_new)
         i += 1
