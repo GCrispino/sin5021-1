@@ -1,4 +1,45 @@
 import numpy as np
+import pandas as pd
+
+""" 
+    for each pair (action: file_path), execute read_action function
+    and reduce all to (n_states,n_actions,n_states) array
+"""
+
+
+def read_actions(paths_dict):
+    actions = paths_dict.keys()
+    action_mats = {a: read_action(path) for a, path in paths_dict.items()}
+    n_states = len(action_mats[actions[0]][0])
+    res_mat = [{} for i in range(n_states)]
+
+    for i_s in range(0, n_states):
+        for a in actions:
+            res_mat[i_s][a] = action_mats[a][i_s].tolist()
+
+    return res_mat
+
+
+"""
+    given path, read file on this location and
+    construct (n_actions,n_states,n_states)
+"""
+
+
+def read_action(path):
+    df = pd.read_csv(path, sep='   ', header=None, engine='python')
+    max_state = int(df[0].max())
+    min_state = int(df[0].min())
+    a_mat = np.zeros((max_state, max_state))
+
+    for s in range(min_state, max_state + 1):
+        df_s = df[df[0] == s]
+        for _, row in df_s.iterrows():
+            _s = int(row[1])
+            p = row[2]
+            a_mat[s - 1][_s - 1] = p
+
+    return a_mat
 
 
 def bellman(T, R, v, A, S, s, gamma):
