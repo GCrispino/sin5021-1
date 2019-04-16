@@ -46,7 +46,6 @@ def PI_mat(A, S, T, matT, R, matR, gamma, epsilon):
         # policy improvement
         res = [bellman(T, R, Vpi, A, S, s, gamma) for s in S]
         newPi = np.array([x[1] for x in res])
-        # print newPi, pi
         if np.all(newPi == pi):
             break
 

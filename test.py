@@ -2,6 +2,7 @@ import json
 import utils
 import datetime
 import numpy as np
+from pi import PI
 
 rewards_path = 'Dados/Ambiente1/Rewards.txt'
 rewards = utils.read_rewards(rewards_path)
@@ -31,5 +32,17 @@ def T(s, a, _s):
     return a_mat[s - 1][a.upper()][_s - 1]
 
 
-with open('result.json', 'w') as fp:
-    json.dump(a_mat, fp)
+gamma = .9
+epsilon = 10 ** -4
+epsilon_v = 10 ** -3
+
+S = np.array(range(1, 135))
+
+A = ["N", "S", "L", "O", "U", "D"]
+
+pi, v, k = PI(A, S, T, R, gamma, epsilon, epsilon_v)
+
+print pi, v
+
+# with open('result.json', 'w') as fp:
+# json.dump(a_mat, fp)
