@@ -15,11 +15,10 @@ def PI(A, S, T, R, gamma, epsilon, epsilon_v):
 
         newPi = np.array([x[1] for x in res])
         norm = np.linalg.norm(newV - v, np.inf)
-        print("norm: ",norm)
+        # print("norm: ", norm)
         if (norm < epsilon):
             break
         v = newV
-        print("v: ",v)
         pi = np.copy(newPi)
         k += 1
 

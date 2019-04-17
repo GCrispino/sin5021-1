@@ -1,6 +1,7 @@
 import numpy as np
 import json
 import random
+import sys
 from pi import PI
 
 matT = None
@@ -8,20 +9,23 @@ with open('matT.json', 'r') as f:
     matT = json.load(f)
 
 
-def T(s, a, _s = None):
-    return matT[s - 1][a.upper()][_s - 1] if _s == None else matT[s - 1][a.upper()][_s - 1]
-
-def T(s, a):
-    return matT[s - 1][a.upper()]
+def T(s, a, _s):
+    return np.array(matT[s - 1][a.upper()]) if _s == None else matT[s - 1][a.upper()][_s - 1]
 
 
+arrR = np.full(10, -1)
+arrR[4] = 0
 
-def R(s, a, _s): return (0 if s == 5 else -1)
+
+def R(s=None, a=None, _s=None):
+    if (not s) and (not a) and (not _s):
+        return arrR
+    return (0 if s == 5 else -1)
 
 
 gamma = .9
-epsilon = 10 ** -4
-epsilon_v = 10 ** -3
+epsilon = 10 ** -5
+epsilon_v = 10 ** -4
 
 S = np.array(range(1, 11))
 

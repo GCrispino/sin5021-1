@@ -4,7 +4,7 @@ import datetime
 
 
 def read_rewards(path):
-    return pd.read_csv(path, header=None).values
+    return pd.read_csv(path, header=None).values.T[0]
 
 
 """ 
@@ -74,25 +74,18 @@ def evaluate(T, R, v, pi, S, gamma, epsilon):
     v_new = np.zeros(len(S))
     i = 0
     while True:
-        print 's begin: '
+        # print 's begin: '
         begin = datetime.datetime.now()
-        for s in S:
-            #rascunho operacoes com vetor
-            v_s = np.zeros(len(S))
-            #v_s = 0 if T(s, pi[s - 1],None) == 0 else T(s, pi[s - 1],None) * (
-            #    R(s, pi[s - 1],None) + gamma * v_old
-            #)
-            for _s in S:
-                v_s[_s - 1] = 0 if T(s, pi[s - 1], _s) == 0 else T(s, pi[s - 1], _s) * (
-                    R(s, pi[s - 1], _s) + gamma * v_old[_s - 1]
-                )
 
-            v_new[s - 1] = np.sum(v_s)
+        for s in S:
+            v_new[s - 1] = T(s, pi[s - 1], None).dot(
+                R(s, None, None) + gamma * v_old
+            )
         end = datetime.datetime.now()
-        print 's end: '
-        print 'time: ',end - begin
+        # print 's end: '
+        print 'time: ', end - begin
         norm = np.linalg.norm(v_new - v_old, np.inf)
-        print("  norm: ",norm)
+        print("  norm: ", norm)
         if norm < epsilon:
             break
         v_old = np.copy(v_new)

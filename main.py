@@ -31,26 +31,28 @@ print("Time spent: ", str(end - begin))
 
 
 def R(s, a, _s):
+    if (not s) and (not a) and (not _s):
+        return rewards
     return rewards[s - 1]
 
 
 def T(s, a, _s):
-    return a_mat[s - 1][a.upper()][_s - 1]
+    return np.array(a_mat[s - 1][a.upper()]) if _s == None else a_mat[s - 1][a.upper()][_s - 1]
 
 
 gamma = 0.9
 epsilon = 10 ** -4
 epsilon_v = 10 ** -3
 
-S = np.array(range(1, len(a_mat)))
+S = np.arange(1, len(a_mat) + 1)
 
 A = ["N", "S", "L", "O", "U", "D"]
 
 
-pi, v, k = PI(A, S, T, R, gamma, epsilon,epsilon_v)
+pi, v, k = PI(A, S, T, R, gamma, epsilon, epsilon_v)
 #pi, v, k = VI(A, S, T, R, gamma, epsilon)
 
-#print pi, v
+print pi, v
 
 
 with open('result.json', 'w') as fp:
