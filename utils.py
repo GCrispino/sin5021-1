@@ -21,7 +21,7 @@ def read_actions(paths_dict):
 
     for i_s in range(0, n_states):
         for a in actions:
-            res_mat[i_s][a] = action_mats[a][i_s].tolist()
+            res_mat[i_s][a] = action_mats[a][i_s]
 
     return res_mat
 
@@ -36,7 +36,7 @@ def read_action(path):
     df = pd.read_csv(path, sep='   ', header=None, engine='python')
     max_state = int(df[0].max())
     min_state = int(df[0].min())
-    a_mat = np.zeros((max_state, max_state))
+    a_mat = np.zeros((max_state, max_state), dtype='float16')
 
     for s in range(min_state, max_state + 1):
         df_s = df[df[0] == s]
@@ -52,11 +52,9 @@ def bellman(T, R, v, A, S, s, gamma):
     res = [float('-inf'), None]
 
     for a in A:
-        q = sum(
+        q = np.sum(
             [
-                0 if T(s, a, _s) == 0
-                else T(s, a, _s) * (R(s, a, _s) + gamma * v[_s - 1])
-                for _s in S
+                T(s, a, None).dot(R(s, None, None) + gamma * v)
             ]
         )
         if (q > res[0]):

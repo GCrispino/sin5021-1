@@ -24,6 +24,7 @@ paths_dict = {
 }
 
 
+print("Lendo arquivos de acoes e recompensa...")
 begin = datetime.datetime.now()
 a_mat = utils.read_actions(paths_dict)
 end = datetime.datetime.now()
