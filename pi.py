@@ -5,24 +5,23 @@ from utils import bellman, evaluate
 
 def PI(A, S, T, R, gamma, epsilon, epsilon_v):
     n_states = len(S)
-    print 'n_states: ', n_states
     v = np.zeros(n_states, dtype="float64")
     # pi = np.full(n_states, "N")
-    pi = np.zeros(n_states, dtype="uint8")
+    # pi = np.zeros(n_states, dtype="uint8")
+    pi = np.full(n_states, A[0])
 
     k = 0
 
     # while (k < 10):
     while (True):
-        print 'k: ', k
+        print('k: ', k)
         newV = evaluate(T, R, v, A, pi, S, gamma, epsilon_v)
         # print 'hello: ', newV
         begin = datetime.datetime.now()
         # raw_input('vai calcular bellman...')
-        newPi = np.fromiter((bellman(T, R, newV, A, S, s, gamma)[1]
-                             for s in S), int)
-
-        print datetime.datetime.now() - begin
+        newPi = np.fromiter((A[bellman(T, R, newV, A, S, s, gamma)[1]]
+                             for s in S), 'U1')
+        print(datetime.datetime.now() - begin)
         norm = np.linalg.norm(v - newV, np.inf)
         print("norm: ", norm, epsilon)
         if (norm < epsilon):

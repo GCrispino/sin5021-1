@@ -80,8 +80,10 @@ end = datetime.datetime.now()
 
 print("Time spent: ", str(end - begin))
 
-pi = pi.reshape((len(S) / (GRID_WIDTH * GRID_HEIGHT), GRID_WIDTH, GRID_HEIGHT))
-v = v.reshape((len(S) / (GRID_WIDTH * GRID_HEIGHT), GRID_WIDTH, GRID_HEIGHT))
+pi = pi.reshape(
+    (int(len(S) / (GRID_WIDTH * GRID_HEIGHT)), GRID_WIDTH, GRID_HEIGHT))
+v = v.reshape((int(len(S) / (GRID_WIDTH * GRID_HEIGHT)),
+               GRID_WIDTH, GRID_HEIGHT))
 
 pp = PdfPages('result.pdf')
 
@@ -95,3 +97,5 @@ for floor in v:
 
 with open('result.json', 'w') as fp:
     json.dump([pi.tolist(), v.tolist()], fp, indent=2)
+
+# plt.show()
