@@ -7,13 +7,17 @@ def VI(A, S, T, R, gamma, epsilon):
     v = np.zeros(n_estados)
     pi = np.chararray(n_estados)
 
+    raw_input('criou os arrays...')
     k = 0
 
     while (True):
+        print 'k: ', k
         res = [bellman(T, R, v, A, S, s, gamma) for s in S]
 
         newV = np.array([x[0] for x in res])
-        pi = np.array([x[1] for x in res])
+        pi = np.array([A[x[1]] for x in res])
+        norm = np.linalg.norm(newV - v, np.inf)
+        print 'norm: ', norm
         if (np.linalg.norm(newV - v, np.inf) < epsilon):
             break
         v = newV

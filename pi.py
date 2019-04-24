@@ -1,25 +1,39 @@
 import numpy as np
+import datetime
 from utils import bellman, evaluate
 
 
 def PI(A, S, T, R, gamma, epsilon, epsilon_v):
     n_states = len(S)
-    v = np.zeros(n_states)
-    pi = np.full(n_states, "N")
+    print 'n_states: ', n_states
+    v = np.zeros(n_states, dtype="float64")
+    # pi = np.full(n_states, "N")
+    pi = np.zeros(n_states, dtype="uint8")
 
     k = 0
 
+    # while (k < 10):
     while (True):
-        newV = evaluate(T, R, v, pi, S, gamma, epsilon_v)
-        res = [bellman(T, R, v, A, S, s, gamma) for s in S]
+        print 'k: ', k
+        newV = evaluate(T, R, v, A, pi, S, gamma, epsilon_v)
+        # print 'hello: ', newV
+        begin = datetime.datetime.now()
+        # raw_input('vai calcular bellman...')
+        newPi = np.array([bellman(T, R, v, A, S, s, gamma)[1]
+                          for s in S])
 
-        newPi = np.array([x[1] for x in res])
-        norm = np.linalg.norm(newV - v, np.inf)
-        # print("norm: ", norm)
+        print datetime.datetime.now() - begin
+        norm = np.linalg.norm(v - newV, np.inf)
+        print("norm: ", norm, epsilon)
         if (norm < epsilon):
             break
+
+        # if (np.all(pi == newPi)):
+        #     break
+        # print "pi: ", pi
+        # print "newPi: ", newPi
         v = newV
-        pi = np.copy(newPi)
+        pi = newPi
         k += 1
 
     return pi, v, k
@@ -46,7 +60,7 @@ def PI_mat(A, S, T, matT, R, matR, gamma, epsilon):
         # policy evaluation
         Vpi = np.dot(np.linalg.inv(np.eye(len(S)) - gamma * Tpi), Rpi)
         # policy improvement
-        res = [bellman(T, R, Vpi, A, S, s, gamma) for s in S]
+        res = np.array([bellman(T, R, Vpi, A, S, s, gamma) for s in S])
         newPi = np.array([x[1] for x in res])
         if np.all(newPi == pi):
             break
