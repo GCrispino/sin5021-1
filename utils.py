@@ -38,7 +38,7 @@ def read_actions(paths):
     n_states = get_n_states(paths[0])
 
     action_mats = np.array([read_action(paths[i])
-                            for i in range(0, n_actions)])
+                            for i in range(0, n_actions)], dtype="float")
 
     return action_mats.transpose(1, 0, 2)
 
@@ -50,12 +50,12 @@ def read_actions(paths):
 
 
 def read_action(path):
-    print("Lendo dados de acao do arquivo ", path)
+    print("Reading action data from file ", path)
 
     df = pd.read_csv(path, sep='   ', header=None, engine='python')
     max_state = int(df[0].max())
     min_state = int(df[0].min())
-    a_mat = np.zeros((max_state, max_state))
+    a_mat = np.zeros((max_state, max_state), dtype='float')
 
     for s in range(min_state, max_state + 1):
         df_s = df[df[0] == s]
@@ -97,17 +97,6 @@ def evaluate(T, R, v, A, pi, S, gamma, epsilon):
         begin = datetime.datetime.now()
 
         for s in S:
-            try:
-                w = s - 1
-                x = v_new[s - 1]
-                y = pi[s - 1]
-                z = A[pi[s - 1]]
-            except:
-                print 'xiiii: '
-                print A, A[-1], type(A)
-                print pi
-                print s - 1, v_new[s - 1], pi[s - 1], A[pi[s - 1]]
-                sys.exit(0)
             v_new[s - 1] = T(s, A[pi[s - 1]], None).dot(
                 R(s, None, None) + gamma * v_old
             )

@@ -4,6 +4,7 @@ import datetime
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_pdf import PdfPages
 import utils
 from pi import PI
 from vi import VI
@@ -40,7 +41,7 @@ paths = [
 ]
 
 
-print("Lendo arquivos de acoes e recompensa...")
+print("Reading rewards and actions files...")
 begin = datetime.datetime.now()
 a_mat = utils.read_actions(paths)
 end = datetime.datetime.now()
@@ -69,24 +70,28 @@ epsilon_v = 10 ** -7
 
 S = np.arange(1, len(a_mat) + 1)
 
+begin = datetime.datetime.now()
 if (algorithm == 0):
     pi, v, k = VI(A, S, T, R, gamma, epsilon)
 elif (algorithm == 1):
     pi, v, k = PI(A, S, T, R, gamma, epsilon, epsilon_v)
 # print pi.shape, v.shape
+end = datetime.datetime.now()
+
+print("Time spent: ", str(end - begin))
 
 pi = pi.reshape((len(S) / (GRID_WIDTH * GRID_HEIGHT), GRID_WIDTH, GRID_HEIGHT))
 v = v.reshape((len(S) / (GRID_WIDTH * GRID_HEIGHT), GRID_WIDTH, GRID_HEIGHT))
 
+pp = PdfPages('result.pdf')
+
 for floor in v:
     plt.figure()
     plt.imshow(floor)
+    plt.savefig(pp, format="pdf")
 
 # print pi, v
 # print pi.shape, v.shape
 
 with open('result.json', 'w') as fp:
     json.dump([pi.tolist(), v.tolist()], fp, indent=2)
-
-
-plt.show()
