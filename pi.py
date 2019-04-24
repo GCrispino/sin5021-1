@@ -19,7 +19,7 @@ def PI(A, S, T, R, gamma, epsilon, epsilon_v):
         # print 'hello: ', newV
         begin = datetime.datetime.now()
         # raw_input('vai calcular bellman...')
-        newPi = np.fromiter((bellman(T, R, v, A, S, s, gamma)[1]
+        newPi = np.fromiter((bellman(T, R, newV, A, S, s, gamma)[1]
                              for s in S), int)
 
         print datetime.datetime.now() - begin
