@@ -183,7 +183,7 @@ arrows = {
 
 
 def plotArrow(action, i, j, A, plt):
-    arrow = arrows[A[action]]
+    arrow = arrows[action]
     plt.arrow(
         arrow['x'] + j,
         arrow['y'] + i,
