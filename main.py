@@ -89,9 +89,18 @@ v = v.reshape((int(len(S) / (GRID_WIDTH * GRID_HEIGHT)),
 
 pp = PdfPages('./results/result' + str(timestamp) + '.pdf')
 
-for floor in v:
+for i_f in range(len(v)):
+    floor_v = v[i_f]
+    floor_pi = pi[i_f]
     plt.figure()
-    plt.imshow(floor)
+
+    n_rows, n_columns = floor_v.shape
+    for i in range(n_rows):
+        for j in range(n_columns):
+            action = floor_pi[i][j]
+            utils.plotArrow(action, i, j, A, plt)
+
+    plt.imshow(floor_v)
     plt.savefig(pp, format="pdf")
 
 pp.close()
