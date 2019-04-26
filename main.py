@@ -92,6 +92,8 @@ for floor in v:
     plt.imshow(floor)
     plt.savefig(pp, format="pdf")
 
+pp.close()
+
 # print pi, v
 # print pi.shape, v.shape
 

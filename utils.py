@@ -73,12 +73,25 @@ def read_action(path):
 def bellman(T, R, v, A, S, s, gamma):
     res = (float('-inf'), 0)
 
+    # begin = datetime.datetime.now()
+
     for i in np.arange(0, len(A)):
         q = np.sum(
             T(s, A[i], None).dot(R(s, None, None) + gamma * v)
         )
         if (q > res[0]):
             res = (q, i)
+
+    # SOLUÇÃO ALTERNATIVA:
+    # depois tentar fromfunction
+    # res = np.fromiter((np.sum(
+    #     T(s, A[i], None).dot(R(s, None, None) + gamma * v)
+    # ) for i in np.arange(0, len(A))), float)
+    # max_a = np.argmax(res)
+
+    # return (res[max_a], max_a)
+    # end = datetime.datetime.now()
+    # print('bellman inside time for state ', s, ': ', end - begin)
 
     return res
 
