@@ -64,7 +64,9 @@ def T(s, a, _s):
     return a_mat[s - 1][i_a] if _s == None else a_mat[s - 1][i_a][_s - 1]
 
 
-gamma = .9
+timestamp = datetime.datetime.now().timestamp()
+
+gamma = .99
 epsilon = 10 ** -10
 epsilon_v = 10 ** -7
 
@@ -85,7 +87,7 @@ pi = pi.reshape(
 v = v.reshape((int(len(S) / (GRID_WIDTH * GRID_HEIGHT)),
                GRID_WIDTH, GRID_HEIGHT))
 
-pp = PdfPages('result.pdf')
+pp = PdfPages('./results/result' + str(timestamp) + '.pdf')
 
 for floor in v:
     plt.figure()
@@ -97,7 +99,7 @@ pp.close()
 # print pi, v
 # print pi.shape, v.shape
 
-with open('result.json', 'w') as fp:
+with open('./results/result' + str(timestamp) + '.json', 'w') as fp:
     json.dump([pi.tolist(), v.tolist()], fp, indent=2)
 
 # plt.show()
