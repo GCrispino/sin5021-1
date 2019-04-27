@@ -73,14 +73,18 @@ epsilon_v = 10 ** -7
 S = np.arange(1, len(a_mat) + 1)
 
 begin = datetime.datetime.now()
+total_inner_iterations = None
 if (algorithm == 0):
     pi, v, k = VI(A, S, T, R, gamma, epsilon)
 elif (algorithm == 1):
-    pi, v, k = PI(A, S, T, R, gamma, epsilon, epsilon_v)
+    pi, v, k, total_inner_iterations = PI(
+        A, S, T, R, gamma, epsilon, epsilon_v
+    )
 # print pi.shape, v.shape
 end = datetime.datetime.now()
+time = end - begin
 
-print("Time spent: ", str(end - begin))
+print("Time spent: ", str(time))
 
 pi = pi.reshape(
     (int(len(S) / (GRID_WIDTH * GRID_HEIGHT)), GRID_WIDTH, GRID_HEIGHT))
@@ -109,6 +113,19 @@ pp.close()
 # print pi.shape, v.shape
 
 with open('./results/result' + str(timestamp) + '.json', 'w') as fp:
-    json.dump([pi.tolist(), v.tolist()], fp, indent=2)
+    res_dict = {
+        'alg': algorithm,
+        'k': k,
+        'gamma': gamma,
+        'epsilon': epsilon,
+        'epsilon': epsilon,
+        'epsilon_v': epsilon_v,
+        'time': time.total_seconds(),
+        'pi': pi.tolist(),
+        'v': v.tolist(),
+    }
+    if (total_inner_iterations):
+        res_dict['inner_iterations'] = total_inner_iterations
+    json.dump(res_dict, fp, indent=2)
 
 # plt.show()

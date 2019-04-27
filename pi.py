@@ -12,10 +12,12 @@ def PI(A, S, T, R, gamma, epsilon, epsilon_v):
 
     k = 0
 
+    total_inner_iterations = 0
     # while (k < 10):
     while (True):
         print('k: ', k)
-        newV = evaluate(T, R, v, A, pi, S, gamma, epsilon_v)
+        newV, inner_iterations = evaluate(T, R, v, A, pi, S, gamma, epsilon_v)
+        total_inner_iterations += inner_iterations
         # print 'hello: ', newV
         begin = datetime.datetime.now()
         # raw_input('vai calcular bellman...')
@@ -28,14 +30,15 @@ def PI(A, S, T, R, gamma, epsilon, epsilon_v):
             break
 
         # if (np.all(pi == newPi)):
-        #     break
+        #     print('EQUAL!')
+            # break
         # print "pi: ", pi
         # print "newPi: ", newPi
         v = newV
         pi = newPi
         k += 1
 
-    return pi, v, k
+    return pi, v, k, total_inner_iterations
 
 
 def PI_mat(A, S, T, matT, R, matR, gamma, epsilon):
