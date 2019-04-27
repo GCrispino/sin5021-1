@@ -122,7 +122,7 @@ def evaluate(T, R, v, A, pi, S, gamma, epsilon):
             break
         v_old = v_new
         i += 1
-    return v_new
+    return v_new, i
 
 
 base_arrow = {
