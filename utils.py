@@ -1,3 +1,4 @@
+from numba import jit
 import numpy as np
 import pandas as pd
 from scipy.sparse import csr_matrix
@@ -34,19 +35,18 @@ def read_actions(paths):
     """
     n_actions = len(paths)
 
-    action_mats = [read_action(paths[i]) for i in range(0, n_actions)]
+    action_mats = np.array([read_action(paths[i])
+                            for i in range(0, n_actions)], dtype="float16")
     n_states = len(action_mats[0][0])
 
-    res_mat = [[0] * n_actions] * n_states
-
-    for i_s in range(0, n_states):
-        for a in range(0, n_actions):
-            res_mat[i_s][a] = action_mats[a][i_s]
-        res_mat[i_s] = csr_matrix(res_mat[i_s])
-
-    return res_mat
+    return [
+        csr_matrix([
+            action_mats[a][i_s] for a in range(0, n_actions)
+        ], dtype="float16") for i_s in range(0, n_states)
+    ]
 
 
+# Tentar retornar um dataframe e depois agregar na read_functions
 def read_action(path):
     """
         given path, read file on this location and
@@ -57,9 +57,10 @@ def read_action(path):
     df = pd.read_csv(path, sep='   ', header=None, engine='python')
     max_state = int(df[0].max())
     min_state = int(df[0].min())
-    a_mat = np.zeros((max_state, max_state), dtype='float')
+    a_mat = np.zeros((max_state, max_state), dtype='float16')
 
-    for s in range(min_state, max_state + 1):
+    # for s in np.arange(min_state, max_state + 1):
+    for s in np.arange(min_state, max_state + 1):
         df_s = df[df[0] == s]
         for _, row in df_s.iterrows():
             _s = int(row[1])
