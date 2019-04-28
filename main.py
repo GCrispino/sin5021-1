@@ -9,14 +9,14 @@ import utils
 from pi import PI
 from vi import VI
 
-GRID_WIDTH = 9
-GRID_HEIGHT = 15
-
 if len(sys.argv) < 3:
     sys.exit("USAGE: python main.py <env_folder> <algorithm={0,1,2}>")
 
 env_path = sys.argv[1]
 algorithm = int(sys.argv[2])
+
+floor_width = (len(sys.argv) > 3 and int(sys.argv[3])) or 15
+floor_height = (len(sys.argv) > 4 and int(sys.argv[4])) or 9
 
 rewards_path = env_path + '/Rewards.txt'
 rewards = utils.read_rewards(rewards_path)
@@ -87,9 +87,9 @@ time = end - begin
 print("Time spent: ", str(time))
 
 pi = pi.reshape(
-    (int(len(S) / (GRID_WIDTH * GRID_HEIGHT)), GRID_WIDTH, GRID_HEIGHT))
-v = v.reshape((int(len(S) / (GRID_WIDTH * GRID_HEIGHT)),
-               GRID_WIDTH, GRID_HEIGHT))
+    (int(len(S) / (floor_width * floor_height)), floor_height, floor_width))
+v = v.reshape((int(len(S) / (floor_width * floor_height)),
+               floor_height, floor_width))
 
 pp = PdfPages('./results/result' + str(timestamp) + '.pdf')
 
