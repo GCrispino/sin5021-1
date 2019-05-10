@@ -8,9 +8,11 @@ from matplotlib.backends.backend_pdf import PdfPages
 import utils
 from pi import PI
 from vi import VI
+from lrtdp import LRTDP
 
 if len(sys.argv) < 3:
     sys.exit("USAGE: python main.py <env_folder> <algorithm={0,1,2}>")
+
 
 env_path = sys.argv[1]
 algorithm = int(sys.argv[2])
@@ -20,16 +22,6 @@ floor_height = (len(sys.argv) > 4 and int(sys.argv[4])) or 9
 
 rewards_path = env_path + '/Rewards.txt'
 rewards = utils.read_rewards(rewards_path)
-
-paths_dict = {
-    'N': env_path + '/Action01.txt',
-    'S': env_path + '/Action02.txt',
-    'L': env_path + '/Action03.txt',
-    'O': env_path + '/Action04.txt',
-    'U': env_path + '/Action05.txt',
-    'D': env_path + '/Action06.txt',
-}
-
 
 paths = [
     env_path + '/Action01.txt',
@@ -66,19 +58,26 @@ def T(s, a, _s):
 
 timestamp = datetime.datetime.now().timestamp()
 
-gamma = .99
-epsilon = 10 ** -10
-epsilon_v = 10 ** -7
+gamma = .9
+epsilon = 10 ** -5
+epsilon_v = 10 ** -5
 
 S = np.arange(1, len(a_mat) + 1)
 
+# get states where reward is 0
+G = np.argwhere(rewards == 0) + 1
+
 begin = datetime.datetime.now()
-total_inner_iterations = None
+total_inner_iterations,k = None,None
 if (algorithm == 0):
     pi, v, k = VI(A, S, T, R, gamma, epsilon)
 elif (algorithm == 1):
     pi, v, k, total_inner_iterations = PI(
         A, S, T, R, gamma, epsilon, epsilon_v
+    )
+elif (algorithm == 2):
+    pi, v = LRTDP(
+        A, S, T, R, G, gamma, epsilon
     )
 # print pi.shape, v.shape
 end = datetime.datetime.now()
@@ -86,6 +85,7 @@ time = end - begin
 
 print("Time spent: ", str(time))
 
+print(pi, v)
 pi = pi.reshape(
     (int(len(S) / (floor_width * floor_height)), floor_height, floor_width))
 v = v.reshape((int(len(S) / (floor_width * floor_height)),
@@ -109,7 +109,6 @@ for i_f in range(len(v)):
 
 pp.close()
 
-# print pi, v
 # print pi.shape, v.shape
 
 with open('./results/result' + str(timestamp) + '.json', 'w') as fp:
@@ -128,4 +127,4 @@ with open('./results/result' + str(timestamp) + '.json', 'w') as fp:
         res_dict['inner_iterations'] = total_inner_iterations
     json.dump(res_dict, fp, indent=2)
 
-# plt.show()
+#plt.show()

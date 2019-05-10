@@ -76,9 +76,7 @@ def bellman(T, R, v, A, S, s, gamma):
     # begin = datetime.datetime.now()
 
     for i in np.arange(0, len(A)):
-        q = np.sum(
-            T(s, A[i], None).dot(R(s, None, None) + gamma * v)
-        )
+        q = T(s, A[i], None).dot(R(s, None, None) + gamma * v)
         if (q > res[0]):
             res = (q, i)
 

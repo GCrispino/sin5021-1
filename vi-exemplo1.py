@@ -7,7 +7,9 @@ with open('matT.json', 'r') as f:
     matT = json.load(f)
 
 
-def T(s, a, _s): return matT[s - 1][a.upper()][_s - 1]
+def T(s, a, _s):
+    return np.array(matT[s - 1][a.upper()]) if _s == None else matT[s - 1][a.upper()][_s - 1]
+# def T(s, a, _s): return matT[s - 1][a.upper()][_s - 1]
 
 
 def R(s, a, _s): return (0 if s == 5 else -1)
@@ -22,6 +24,6 @@ A = ["N", "S", "L", "O"]
 
 pi, v, k = VI(A, S, T, R, gamma, epsilon)
 
-print k
-print v
-print pi
+print(k)
+print(v)
+print(pi)
