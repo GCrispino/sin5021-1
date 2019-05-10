@@ -23,7 +23,7 @@ def R(s=None, a=None, _s=None):
     return (0 if s == 5 else -1)
 
 
-gamma = .9
+gamma = .999
 epsilon = 10 ** -5
 epsilon_v = 10 ** -4
 
@@ -31,8 +31,8 @@ S = np.array(range(1, 11))
 
 A = ["N", "S", "L", "O"]
 
-pi, v, k = PI(A, S, T, R, gamma, epsilon, epsilon_v)
+pi, v, k, _ = PI(A, S, T, R, gamma, epsilon, epsilon_v)
 
-print 'k: ', k
-print 'v: ', v
-print 'pi: ', pi
+print('k: ', k)
+print('v: ', v)
+print('pi: ', pi)

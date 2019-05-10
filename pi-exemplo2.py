@@ -9,7 +9,7 @@ with open('matT2.json', 'r') as f:
 
 
 def T(s, a, _s):
-    return matT[s - 1][a.upper()][_s - 1]
+    return np.array(matT[s - 1][a.upper()]) if _s == None else matT[s - 1][a.upper()][_s - 1]
 
 
 def R(s, a, _s): return (0 if s == 6 else -1)
@@ -23,8 +23,8 @@ S = np.array(range(1, 7))
 
 A = ["N", "S", "L", "O"]
 
-pi, v, k = PI(A, S, T, R, gamma, epsilon, epsilon_v)
+pi, v, k, _ = PI(A, S, T, R, gamma, epsilon, epsilon_v)
 
-print 'k: ', k
-print 'v: ', v
-print 'pi: ', pi
+print('k: ', k)
+print('v: ', v)
+print('pi: ', pi)
