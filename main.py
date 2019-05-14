@@ -70,13 +70,13 @@ G = np.argwhere(rewards == 0) + 1
 begin = datetime.datetime.now()
 total_inner_iterations,k = None,None
 if (algorithm == 0):
-    pi, v, k = VI(A, S, T, R, gamma, epsilon)
+    pi, v, k, n_updates = VI(A, S, T, R, gamma, epsilon)
 elif (algorithm == 1):
-    pi, v, k, total_inner_iterations = PI(
+    pi, v, k, total_inner_iterations, n_updates = PI(
         A, S, T, R, gamma, epsilon, epsilon_v
     )
 elif (algorithm == 2):
-    pi, v = LRTDP(
+    pi, v, n_updates = LRTDP(
         A, S, T, R, G, gamma, epsilon
     )
 # print pi.shape, v.shape
@@ -85,7 +85,6 @@ time = end - begin
 
 print("Time spent: ", str(time))
 
-print(pi, v)
 pi = pi.reshape(
     (int(len(S) / (floor_width * floor_height)), floor_height, floor_width))
 v = v.reshape((int(len(S) / (floor_width * floor_height)),
@@ -115,6 +114,7 @@ with open('./results/result' + str(timestamp) + '.json', 'w') as fp:
     res_dict = {
         'alg': algorithm,
         'k': k,
+        'n_updates': n_updates,
         'gamma': gamma,
         'epsilon': epsilon,
         'epsilon': epsilon,

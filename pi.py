@@ -36,9 +36,8 @@ def PI(A, S, T, R, gamma, epsilon, epsilon_v):
         v = newV
         pi = newPi
         k += 1
-    #n_updates = n_states * total_inner_iterations
 
-    return pi, v, k, total_inner_iterations
+    return pi, v, k, total_inner_iterations, n_updates
 
 
 def PI_mat(A, S, T, matT, R, matR, gamma, epsilon):

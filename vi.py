@@ -32,4 +32,4 @@ def VI(A, S, T, R, gamma, epsilon):
         k += 1
 
     n_updates = k * (n_states * n_actions)
-    return pi, v, k
+    return pi, v, k, n_updates

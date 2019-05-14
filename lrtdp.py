@@ -112,8 +112,10 @@ def LRTDP(A, S, T, R, G, gamma, epsilon):
 
         while visited != []:
             s = visited.pop()
-            if not check_solved(s, v, pi, S, T, R, A, labels, res, epsilon, gamma):
+            rv, n_check_solved_updates = check_solved(s, v, pi, S, T, R, A, labels, res, epsilon, gamma)
+            n_updates += n_check_solved_updates
+            if not rv:
                 break
         print("Solved labels: ",np.where(labels == 1)[0].size,n_states)
         print("Residual: ",res)
-    return pi,v
+    return pi, v, n_updates
