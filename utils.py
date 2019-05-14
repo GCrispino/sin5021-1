@@ -35,17 +35,17 @@ def read_actions(paths):
     n_actions = len(paths)
 
     action_mats = np.array([read_action(paths[i])
-                            for i in range(0, n_actions)], dtype="float16")
+        for i in range(0, n_actions)], dtype="float16")
     n_states = len(action_mats[0][0])
 
     return [
-        csr_matrix([
-            action_mats[a][i_s] for a in range(0, n_actions)
-        ], dtype="float16") for i_s in range(0, n_states)
-    ]
+            csr_matrix([
+                action_mats[a][i_s] for a in range(0, n_actions)
+                ], dtype="float16") for i_s in range(0, n_states)
+            ]
 
 
-# Tentar retornar um dataframe e depois agregar na read_functions
+    # Tentar retornar um dataframe e depois agregar na read_functions
 def read_action(path):
     """
         given path, read file on this location and
@@ -94,32 +94,28 @@ def bellman(T, R, v, A, S, s, gamma):
     return res
 
 
-def evaluate_1(T, R, v, pi, S, gamma, m):
-    I = np.identity(len(S))
-
 
 def evaluate(T, R, v, A, pi, S, gamma, epsilon):
+    n_states = len(S)
     v_old = np.copy(v)
-    v_new = np.zeros(len(S))
+    v_new = np.zeros(n_states)
     i = 0
+
     while True:
-        # print 's begin: '
         begin = datetime.datetime.now()
 
         for s in S:
             v_new[s - 1] = T(s, pi[s - 1], None).dot(
                 R(s, None, None) + gamma * v_old
             )
-        # end = datetime.datetime.now()
-        # print 's end: '
-        # print 'time: ', end - begin
+
         norm = np.linalg.norm(v_new - v_old, np.inf)
-        # print("  norm_eval: ", norm, epsilon)
-        # if (np.sum((np.fabs(v_old - v_new))) <= epsilon):
         if norm < epsilon:
             break
         v_old = v_new
+
         i += 1
+
     return v_new, i
 
 

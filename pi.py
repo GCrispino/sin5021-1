@@ -5,24 +5,24 @@ from utils import bellman, evaluate
 
 def PI(A, S, T, R, gamma, epsilon, epsilon_v):
     n_states = len(S)
+    n_actions = len(A)
     v = np.zeros(n_states, dtype="float64")
-    # pi = np.full(n_states, "N")
-    # pi = np.zeros(n_states, dtype="uint8")
     pi = np.full(n_states, A[0])
 
     k = 0
+    n_updates = 0
 
     total_inner_iterations = 0
-    # while (k < 10):
     while (True):
         print('k: ', k)
         newV, inner_iterations = evaluate(T, R, v, A, pi, S, gamma, epsilon_v)
+        n_evaluate_updates = n_states * inner_iterations
         total_inner_iterations += inner_iterations
-        # print 'hello: ', newV
         begin = datetime.datetime.now()
-        # raw_input('vai calcular bellman...')
         newPi = np.fromiter((A[bellman(T, R, newV, A, S, s, gamma)[1]]
                              for s in S), 'U1')
+        n_improvement_updates = n_states * n_actions
+        n_updates += n_evaluate_updates + n_improvement_updates
         print(datetime.datetime.now() - begin)
         norm = np.linalg.norm(v - newV, np.inf)
         print("norm: ", norm, epsilon)
@@ -32,11 +32,11 @@ def PI(A, S, T, R, gamma, epsilon, epsilon_v):
         # if (np.all(pi == newPi)):
         #     print('EQUAL!')
             # break
-        # print "pi: ", pi
-        # print "newPi: ", newPi
+
         v = newV
         pi = newPi
         k += 1
+    #n_updates = n_states * total_inner_iterations
 
     return pi, v, k, total_inner_iterations
 
